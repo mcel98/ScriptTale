@@ -199,6 +199,7 @@ class Scanner {
         case '(': addToken(LEFT_PAREN); casing_nest_level++; break;
         case ')': addToken(RIGHT_PAREN); casing_nest_level--; break;
         case ',': addToken(COMMA); break;
+        case ';': addToken(SEMICOLON); break;
         case '.': addToken(DOT); break;
         case '-': addToken(MINUS); break;
         case '+': addToken(PLUS); break;

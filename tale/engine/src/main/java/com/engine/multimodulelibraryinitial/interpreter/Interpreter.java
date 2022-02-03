@@ -6,6 +6,7 @@ import com.engine.multimodulelibraryinitial.logic.script;
 class CompilingError extends RuntimeException {
     final Token token;
 
+
     CompilingError(Token token, String message) {
         super(message);
         this.token = token;
@@ -15,7 +16,7 @@ class CompilingError extends RuntimeException {
 class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void>{
 
     private ErrorReporter reporter;
-
+    private Environment environment = new Environment();
 
     Interpreter(ErrorReporter reporter){
         this.reporter = reporter;
@@ -76,13 +77,20 @@ class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void>{
         if (stmt.initializer != null) {
             value = evaluate(stmt.initializer);
         }
-        stmt.scope.set(stmt.name.lexeme, value);
+        environment.define(stmt.name.lexeme, value);
     return null;
     }
 
     @Override
-    public Void visitVariable(Expr.Variable expr) {
-        return null;
+    public Object visitVariable(Expr.Variable expr) {
+      return environment.get(expr.name);
+    }
+
+    @Override
+    public Object visitAssign(Expr.Assign expr) {
+      Object value = evaluate(expr.value);
+      environment.assign(expr.name, value);
+      return value;
     }
 
     @Override

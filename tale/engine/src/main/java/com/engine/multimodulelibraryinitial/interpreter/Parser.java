@@ -45,8 +45,26 @@ class Parser {
           initializer = expression();
         }
     
-        consume(DOT, "Expect '.' after variable declaration.");
+        consume(SEMICOLON, "Expect ';' after variable declaration.");
         return new Stmt.Var(name, initializer);
+    }
+
+    private Expr assignment() {
+        Expr expr = equality();
+    
+        if (match(EQUAL)) {
+          Token equals = previous();
+          Expr value = assignment();
+    
+          if (expr instanceof Expr.Variable) {
+            Token name = ((Expr.Variable)expr).name;
+            return new Expr.Assign(name, value);
+          }
+    
+          error(equals, "Invalid assignment target."); 
+        }
+    
+        return expr;
     }
 
     private Stmt statement() {
@@ -57,18 +75,18 @@ class Parser {
 
     private Stmt printStatement() {
         Expr value = expression();
-        consume(DOT, "Expect '.' after value.");
+        consume(SEMICOLON, "Expect ';' after value.");
         return new Stmt.Print(value);
     }
 
     private Stmt expressionStatement() {
         Expr expr = expression();
-        consume(DOT, "Expect '.' after expression.");
+        consume(SEMICOLON, "Expect ';' after expression.");
         return new Stmt.Expression(expr);
     }
 
     private Expr expression() {
-        return equality();
+        return assignment();
     }
 
 
@@ -204,7 +222,7 @@ class Parser {
         advance();
     
         while (!isAtEnd()) {
-            if (previous().type == DOT) return;
+            if (previous().type == SEMICOLON) return;
     
             switch (peek().type) {
                 case SAY:

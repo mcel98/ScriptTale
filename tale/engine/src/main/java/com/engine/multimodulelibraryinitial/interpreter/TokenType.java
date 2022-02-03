@@ -3,7 +3,7 @@ package com.engine.multimodulelibraryinitial.interpreter;
 enum TokenType {
   // Single-character tokens.
   LEFT_PAREN, RIGHT_PAREN,
-  COMMA, DOT, MINUS, PLUS, SLASH, STAR, COLON, INDENT, DEDENT,
+  COMMA, DOT, MINUS, PLUS, SLASH, STAR, COLON, INDENT, DEDENT,SEMICOLON,
 
   // One or two character tokens.
   BANG, BANG_EQUAL,
