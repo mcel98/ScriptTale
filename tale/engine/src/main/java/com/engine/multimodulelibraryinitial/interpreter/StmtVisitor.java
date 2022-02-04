@@ -7,5 +7,6 @@ public interface StmtVisitor<R> {
     R visitExpression(Expression expression);
     R visitPrint(Print print);
     R visitVariable(Var var);
+    R visitBlock(Block block);
     
 }

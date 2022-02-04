@@ -198,6 +198,8 @@ class Scanner {
     switch (c) {
         case '(': addToken(LEFT_PAREN); casing_nest_level++; break;
         case ')': addToken(RIGHT_PAREN); casing_nest_level--; break;
+        case '{': addToken(LEFT_BRACE); casing_nest_level++; break;
+        case '}': addToken(RIGHT_BRACE); casing_nest_level--; break;
         case ',': addToken(COMMA); break;
         case ';': addToken(SEMICOLON); break;
         case '.': addToken(DOT); break;
@@ -218,8 +220,8 @@ class Scanner {
             break;
         case ' ':
         case '\r':
+        case '\t':
             break;
-        case '\t': set_scope();break;
         case '\n': if(isTerminated() && isDigit(peekNext())){
 
           }else{

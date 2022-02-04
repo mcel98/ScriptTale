@@ -15,7 +15,11 @@ public class ConsoleErrorReporter implements ErrorReporter {
     public void report(String message) {
         System.err.println(message);
         hadError = true;
-     }
+    }
+
+    public void reset(){
+        hadError = false;
+    }
 
 
 }

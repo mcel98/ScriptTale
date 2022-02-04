@@ -1,9 +1,20 @@
 package com.engine.multimodulelibraryinitial.interpreter;
-
+import java.util.List;
 
 abstract class Stmt {
 
   abstract <R> R accept(StmtVisitor<R> visitor);
+  static class Block extends Stmt {
+    Block(List<Stmt> statements) {
+      this.statements = statements;
+    }
+
+    @Override
+    <R> R accept(StmtVisitor<R> visitor) {
+      return visitor.visitBlock(this);
+    }
+    final List<Stmt> statements;
+  }
     static class Expression extends Stmt {
         Expression(Expr expression) {
           this.expression = expression;

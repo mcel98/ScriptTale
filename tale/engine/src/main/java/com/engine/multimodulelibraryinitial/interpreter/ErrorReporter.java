@@ -4,5 +4,6 @@ interface ErrorReporter {
 
     void report(String message);
     boolean hasError();
+    void reset();
 
 }

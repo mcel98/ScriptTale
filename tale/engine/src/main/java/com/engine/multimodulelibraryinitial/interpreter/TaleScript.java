@@ -30,6 +30,7 @@ public class TaleScript {
     private static void runFile(String path) throws IOException {
         byte[] bytes = Files.readAllBytes(Paths.get(path)); // limitar directorio a donde puede leer
         run(new String(bytes, Charset.defaultCharset()));
+        if (reporter.hasError()) System.exit(65);
     }
 
     private static void runPrompt() throws IOException {
@@ -41,6 +42,7 @@ public class TaleScript {
             String line = reader.readLine();
             if (line == null) break;
             run(line);
+            reporter.reset();
         }
     }
 
