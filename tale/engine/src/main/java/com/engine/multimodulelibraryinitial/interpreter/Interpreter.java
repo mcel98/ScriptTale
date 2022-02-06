@@ -2,6 +2,7 @@ package com.engine.multimodulelibraryinitial.interpreter;
 
 import java.util.List;
 import com.engine.multimodulelibraryinitial.logic.script;
+import java.util.ArrayList;
 
 class CompilingError extends RuntimeException {
     final Token token;
@@ -100,6 +101,16 @@ class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void>{
     }
 
     @Override
+    public Void visitIf(Stmt.If stmt) {
+      if (isTruthy(evaluate(stmt.condition))) {
+        execute(stmt.thenBranch);
+      } else if (stmt.elseBranch != null) {
+        execute(stmt.elseBranch);
+      }
+      return null;
+    }
+
+    @Override
     public Object visitVariable(Expr.Variable expr) {
       return environment.get(expr.name);
     }
@@ -172,12 +183,43 @@ class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void>{
             case LESS_EQUAL:
                 checkNumberOperands(expr.operator, left, right);
                 return (double)left <= (double)right;
-            case BANG_EQUAL: return String.valueOf(!left.equals(right));
-            case EQUAL_EQUAL: return String.valueOf(left.equals(right));
+            case BANG_EQUAL: return !left.equals(right);
+            case EQUAL_EQUAL: return left.equals(right);
         }
 
     // Unreachable.
     return null;
+  }
+
+  @Override
+  public Object visitLogical(Expr.Logical expr) {
+    Object left = evaluate(expr.left);
+
+    if (expr.operator.type == TokenType.OR) {
+      if (isTruthy(left)) return left;
+    } else {
+      if (!isTruthy(left)) return left;
+    }
+
+    return evaluate(expr.right);
+  }
+
+  @Override
+  public Object visitCall(Expr.Call expr) {
+    Object callee = evaluate(expr.callee);
+
+    List<Object> arguments = new ArrayList<>();
+    for (Expr argument : expr.arguments) { 
+      arguments.add(evaluate(argument));
+    }
+
+    if (!(callee instanceof TaleCallable)) {
+        throw new CompilingError(expr.paren,
+            "Can only call functions and classes.");
+    }
+
+    TaleCallable function = (TaleCallable)callee;
+    return function.call(this, arguments);
   }
 
     void interpret(List<Stmt> statements) { 

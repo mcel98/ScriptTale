@@ -56,4 +56,23 @@ abstract class Stmt {
       final Token name;
 
     }
+
+    static class If extends Stmt {
+      If(Expr condition, Stmt thenBranch,  Stmt elseBranch) {
+        this.condition = condition;
+        this.thenBranch = thenBranch;
+        this.elseBranch = elseBranch; 
+
+      }
+
+      @Override
+      <R> R accept(StmtVisitor<R> visitor) {
+        return visitor.visitIf(this);
+      } 
+
+      final Expr condition;
+      final Stmt thenBranch;
+      final Stmt elseBranch;
+
+    }
 }

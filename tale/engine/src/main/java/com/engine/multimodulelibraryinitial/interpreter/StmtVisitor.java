@@ -8,5 +8,6 @@ public interface StmtVisitor<R> {
     R visitPrint(Print print);
     R visitVariable(Var var);
     R visitBlock(Block block);
+    R visitIf(If If);
     
 }

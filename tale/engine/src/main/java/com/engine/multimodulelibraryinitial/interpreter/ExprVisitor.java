@@ -9,4 +9,6 @@ public interface ExprVisitor<R> {
     R visitGrouping(Grouping grouping);
     R visitVariable(Variable variable);
     R visitAssign(Assign assign);
+    R visitLogical(Logical logical);
+    R visitCall(Call call);
 }

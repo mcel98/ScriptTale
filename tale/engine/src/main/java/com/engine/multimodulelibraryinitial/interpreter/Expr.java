@@ -1,5 +1,6 @@
 package com.engine.multimodulelibraryinitial.interpreter;
 import com.engine.multimodulelibraryinitial.logic.script;
+import java.util.List;
 
 abstract class Expr {
 
@@ -88,6 +89,42 @@ abstract class Expr {
 
       final Token name;
       final Expr value;
+    }
+
+    static class Logical extends Expr {
+      Logical(Expr left, Token operator, Expr right) {
+        this.operator = operator;
+        this.left = left;
+        this.right = right ;
+
+      }
+
+      @Override
+      <R> R accept(ExprVisitor<R> visitor) {
+        return visitor.visitLogical(this);
+      }
+
+      final Token operator;
+      final Expr left;
+      final Expr right;
+    }
+
+    static class Call extends Expr {
+      Call(Expr callee, Token paren, List<Expr> arguments) {
+        this.callee = callee;
+        this.paren = paren;
+        this.arguments = arguments ;
+
+      }
+
+      @Override
+      <R> R accept(ExprVisitor<R> visitor) {
+        return visitor.visitCall(this);
+      }
+
+      final Expr callee;
+      final Token paren;
+      final List<Expr> arguments;
     }
     
 }
