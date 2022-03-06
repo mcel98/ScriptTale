@@ -111,6 +111,13 @@ class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void>{
     }
 
     @Override
+    public Void visitFunction(Stmt.Function stmt) {
+      TaleFunction function = new TaleFunction(stmt);
+      environment.define(stmt.name, function);
+      return null;
+    }
+
+    @Override
     public Object visitVariable(Expr.Variable expr) {
       return environment.get(expr.name);
     }
@@ -219,6 +226,11 @@ class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void>{
     }
 
     TaleCallable function = (TaleCallable)callee;
+    if (arguments.size() != function.arity()) {
+        throw new CompilingError(expr.paren, "Expected " +
+            function.arity() + " arguments but got " +
+            arguments.size() + ".");
+    }
     return function.call(this, arguments);
   }
 

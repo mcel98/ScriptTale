@@ -75,4 +75,22 @@ abstract class Stmt {
       final Stmt elseBranch;
 
     }
+    static class Function extends Stmt {
+      Function(Token name, List<Token> params,  List<Stmt> body) {
+        this.name = name;
+        this.params = params;
+        this.body = body; 
+
+      }
+
+      @Override
+      <R> R accept(StmtVisitor<R> visitor) {
+        return visitor.visitFunction(this);
+      } 
+
+      final Token name;
+      final List<Token> params;  
+      final List<Stmt> body;
+
+  }
 }

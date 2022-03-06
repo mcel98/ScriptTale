@@ -9,5 +9,6 @@ public interface StmtVisitor<R> {
     R visitVariable(Var var);
     R visitBlock(Block block);
     R visitIf(If If);
+    R visitFunction(Function function);
     
 }
